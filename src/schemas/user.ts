@@ -1,7 +1,7 @@
 import User from "interfaces/User";
 import * as mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<User>(
   {
     username: String,
     password: {

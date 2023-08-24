@@ -4,10 +4,12 @@ import * as jwt from "jsonwebtoken";
 import Route from "../interfaces/Route";
 import validationMiddleware from "../middleware/validation.middleware";
 import userModel from "../schemas/user";
-import Credentials from "../interfaces/Credentials";
+
 import UsernameAlreadyTakenException from "../exceptions/UsernameAlreadyTakenException";
 import WrongCredentialsException from "../exceptions/WrongCredentialsException";
-import config from "../config";
+// import config from "@/";
+import User from "interfaces/User";
+import Credentials from "forum-shared";
 class AuthRoute implements Route {
   public path = "/auth";
   public router = Router();
@@ -63,7 +65,9 @@ class AuthRoute implements Route {
   ) => {
     try {
       const credentials: Credentials = request.body;
-      const user = await this.user.findOne({ username: credentials.username });
+      const user: User = await this.user.findOne({
+        username: credentials.username,
+      });
       if (!user) {
         next(new WrongCredentialsException());
         return;

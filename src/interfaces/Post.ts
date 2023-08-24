@@ -30,3 +30,12 @@ export default class Post implements IPost {
   @IsString()
   public body: string;
 }
+
+// interface Animal extends mongoose.Document {
+//   name: string;
+// }
+// Usage:
+
+// export let AnimalSchema = mongoose.model<Animal>('animal', schema, 'animals');
+// let animal = await AnimalSchema.find({_id: "id"}).exec();
+// // animal._id / animal.name
