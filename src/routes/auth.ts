@@ -9,7 +9,8 @@ import UsernameAlreadyTakenException from "../exceptions/UsernameAlreadyTakenExc
 import WrongCredentialsException from "../exceptions/WrongCredentialsException";
 // import config from "@/";
 import User from "interfaces/User";
-import Credentials from "forum-shared";
+import { Credentials, VCredentials } from "../utils/index";
+
 class AuthRoute implements Route {
   public path = "/auth";
   public router = Router();
@@ -21,16 +22,8 @@ class AuthRoute implements Route {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/user`, this.getPublicUser);
-    this.router.post(
-      `${this.path}/register`,
-      validationMiddleware(Credentials),
-      this.registration
-    );
-    this.router.post(
-      `${this.path}/signin`,
-      validationMiddleware(Credentials),
-      this.validateCredentials
-    );
+    this.router.post(`${this.path}/register`, this.registration);
+    this.router.post(`${this.path}/signin`, this.validateCredentials);
   }
 
   private registration = async (
@@ -38,15 +31,18 @@ class AuthRoute implements Route {
     response: Response,
     next: NextFunction
   ) => {
-    const userData: Credentials = request.body;
+    const credentials: Credentials = request.body;
+
+    const validate = VCredentials.parseAsync(credentials);
+    console.log(validate);
     try {
-      if (await this.user.findOne({ username: userData.username })) {
+      if (await this.user.findOne({ username: credentials.username })) {
         next(new UsernameAlreadyTakenException());
         return;
       }
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const hashedPassword = await bcrypt.hash(credentials.password, 10);
       const user = await this.user.create({
-        username: userData.username,
+        username: credentials.username,
         password: hashedPassword,
       });
 
@@ -64,7 +60,12 @@ class AuthRoute implements Route {
     next: NextFunction
   ) => {
     try {
+      console.log("######");
       const credentials: Credentials = request.body;
+
+      // const validate = VCredentials.parse(credentials);
+      // console.log(validate);
+
       const user: User = await this.user.findOne({
         username: credentials.username,
       });
