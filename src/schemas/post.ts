@@ -1,4 +1,4 @@
-import Post from "../interfaces/Post";
+// import Post from "../interfaces/Post";
 import * as mongoose from "mongoose";
 import { AutoIncrementID } from "@typegoose/auto-increment";
 
@@ -37,5 +37,5 @@ const postSchema = new mongoose.Schema(
 );
 postSchema.plugin(AutoIncrementID, { field: "num", startAt: 1 });
 
-const postModel = mongoose.model<Post>("Post", postSchema);
+const postModel = mongoose.model<any>("Post", postSchema);
 export default postModel;

@@ -2,14 +2,12 @@ import { Request, Response, NextFunction, Router } from "express";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import Route from "../interfaces/Route";
-import validationMiddleware from "../middleware/validation.middleware";
+
 import userModel from "../schemas/user";
 
 import UsernameAlreadyTakenException from "../exceptions/UsernameAlreadyTakenException";
 import WrongCredentialsException from "../exceptions/WrongCredentialsException";
-// import config from "@/";
 import User from "interfaces/User";
-import { Credentials, VCredentials } from "../utils/index";
 
 class AuthRoute implements Route {
   public path = "/auth";
@@ -31,10 +29,8 @@ class AuthRoute implements Route {
     response: Response,
     next: NextFunction
   ) => {
-    const credentials: Credentials = request.body;
+    const credentials: any = request.body;
 
-    const validate = VCredentials.parseAsync(credentials);
-    console.log(validate);
     try {
       if (await this.user.findOne({ username: credentials.username })) {
         next(new UsernameAlreadyTakenException());
@@ -60,12 +56,7 @@ class AuthRoute implements Route {
     next: NextFunction
   ) => {
     try {
-      console.log("######");
-      const credentials: Credentials = request.body;
-
-      // const validate = VCredentials.parse(credentials);
-      // console.log(validate);
-
+      const credentials: any = request.body;
       const user: User = await this.user.findOne({
         username: credentials.username,
       });

@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import Controller from "./interfaces/Route";
-import errorMiddleware from "./middleware/error.middleware";
+import errorMiddleware from "./middleware/error";
 import config, { ClientOrigins } from "./config";
 
 class App {
@@ -44,11 +44,16 @@ class App {
   }
 
   private connectDatabase(): void {
+    console.log(
+      "connecting to: " +
+        `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}/core`
+    );
     mongoose
       .connect(
         `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}/core`
       )
-      .then(() => console.log("DB connected"));
+      .then(() => console.log("DB connected"))
+      .catch((err: any) => console.log(err));
   }
 
   public listen() {

@@ -1,0 +1,76 @@
+# version: '3'
+# services:
+  # app:
+  #   container_name: forum-server
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - "./app:/app"
+  #   command: sh -c "npm run dev"
+  #   env_file: .env
+  #   depends_on:
+  #     - mongodb
+
+  # nginx:
+  #   image: nginx:1.17
+  #   container_name: forum-nginx
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+  #   depends_on:
+  #     - app
+
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: forum-db
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongo:27017/
+      MONGO_INITDB_DATABASE: core
+    # volumes:
+      # - mongodb:/data/db
+      
+    ports:
+      - 27017:27017
+    volumes:
+            - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+volumes:
+  mongodb:
+# version: '3.7'
+
+# services:
+#     mongodb:
+#         image: mongo:latest
+#         container_name: mongodb
+#         restart: always
+#         environment:
+#             MONGO_INITDB_ROOT_USERNAME: <admin-user>
+#             MONGO_INITDB_ROOT_PASSWORD: <admin-password>
+#             MONGO_INITDB_DATABASE: <database to create>
+#         ports:
+#             - 27017:27017
+#         volumes:
+#             - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+#   db.createUser(
+#         {
+#             user: "<user for database which shall be created>",
+#             pwd: "<password of user>",
+#             roles: [
+#                 {
+#                     role: "readWrite",
+#                     db: "<database to create>"
+#                 }
+#             ]
+#         }
+# );

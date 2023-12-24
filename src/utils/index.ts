@@ -1,39 +1,39 @@
-import * as mongoose from "mongoose";
-import { z } from "zod";
-const ObjectId = mongoose.Schema.Types.ObjectId;
+// import { z } from "zod";
 
-export interface User extends mongoose.Document {
-  username: string;
-  password: string;
-}
+// export interface User {
+//   username: string;
+//   password: string;
+// }
 
-export const VPost = z.object({
-  _id: z.instanceof(ObjectId),
-  password: z.string(),
-  num: z.number(),
-  subject: z.string(),
-  userId: z.instanceof(ObjectId),
-  username: z.string(),
-  ref: z.instanceof(ObjectId).optional(),
-  body: z.string(),
-});
+// export const VPost = z.object({
+//   _id: z.string(),
+//   num: z.number(),
+//   subject: z.string(),
+//   userId: z.string(),
+//   username: z.string(),
+//   ref: z.string(),
+//   body: z.string(),
+// });
 
-export type Post = z.infer<typeof VPost>;
+// export type Post = z.infer<typeof VPost>;
 
-export const VCredentials = z.object({
-  username: z.string(),
-  password: z.string(),
-});
-export type Credentials = z.infer<typeof VCredentials>;
+// export const VCredentials = z.object({
+//   username: z.string(),
+//   password: z.string(),
+// });
+// export type Credentials = z.infer<typeof VCredentials>;
 
-export const VReplyPost = z.object({
-  ref: z.instanceof(ObjectId),
-  body: z.string(),
-});
-export type ReplyPost = z.infer<typeof VReplyPost>;
+// export const VReplyPost = z.object({
+//   ref: z.string(),
+//   body: z.string(),
+// });
+// export type ReplyPost = z.infer<typeof VReplyPost>;
 
-export const VCreatePost = z.object({
-  subject: z.string(),
-  body: z.string(),
-});
-export type CreatePost = z.infer<typeof VCreatePost>;
+// export const VCreatePost = z.object({
+//   subject: z
+//     .string()
+//     .min(1, { message: "Subject required." })
+//     .max(101, { message: "Subject cannot exceed 100 characters." }),
+//   body: z.string().min(1, { message: "Body required." }),
+// });
+// export type CreatePost = z.infer<typeof VCreatePost>;
