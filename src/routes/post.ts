@@ -11,6 +11,8 @@ import {
   postValidation,
   type PostReply,
   postReplySchema,
+  type PostCreate,
+  postCreateSchema,
 } from "../interfaces/Post";
 
 class PostRoute implements Route {
@@ -26,7 +28,7 @@ class PostRoute implements Route {
     this.router.post(
       `${this.path}/add`,
       validateToken,
-      validate(postValidation),
+      validate(postCreateSchema),
       this.addPost
     );
     this.router.get(`${this.path}/:id`, validateToken, this.getPost);
@@ -96,17 +98,22 @@ class PostRoute implements Route {
 
   private addPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("##########");
+      console.log(req.body);
       const post = await this.post.create({
         userId: req.query.userId ?? undefined,
         subject: req.body.subject ?? undefined,
         username: req.query.username ?? undefined,
         body: req.body.body,
+        media: req.body.media,
+        url: req.body.url,
       });
       // console.log(post);
 
       // console.log(await this.isImage("https://www.google.com"));
       // res.send({ _id: post._id.toString() });
-      res.send({ _id: post._id.toString() });
+      res.send(post._id.toString());
+      // res.send({ _id: post._id.toString() });
     } catch (e) {
       console.log(e);
       next(e);
@@ -153,6 +160,8 @@ class PostRoute implements Route {
             username: {
               $ifNull: [{ $arrayElemAt: ["$user.username", 0] }, "$username"],
             },
+            media: 1,
+            url: 1,
           },
         },
       ]);
@@ -168,6 +177,7 @@ class PostRoute implements Route {
     next: NextFunction
   ) => {
     try {
+      console.log("#########");
       const post = await this.post.create({
         ref: new mongoose.Types.ObjectId(req.params.id),
         userId: req.query.userId ?? undefined,
@@ -178,6 +188,7 @@ class PostRoute implements Route {
       console.log(post);
       res.send(post);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };

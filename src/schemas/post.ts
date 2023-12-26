@@ -24,6 +24,12 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    media: {
+      type: String,
+    },
+    url: {
+      type: String,
+    },
   },
   {
     id: false,
